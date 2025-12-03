@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2847 50%, #2d4263 100%);
+            min-height: 100vh;
+            color: #ecf0f1;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Star background */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent);
+            background-size: 200px 200px;
+            animation: twinkle 5s linear infinite;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        /* Shiny stars */
+        .shiny-star {
+            position: fixed;
+            font-size: 30px;
+            animation: shine 2s ease-in-out infinite, float 4s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .star1 { top: 15%; left: 10%; animation-delay: 0s; }
+        .star2 { top: 25%; right: 15%; animation-delay: 0.5s; }
+        .star3 { top: 70%; left: 20%; animation-delay: 1s; }
+        .star4 { bottom: 20%; right: 25%; animation-delay: 1.5s; }
+        .star5 { top: 45%; left: 5%; animation-delay: 2s; }
+
+        @keyframes shine {
+            0%, 100% { 
+                opacity: 0.6;
+                filter: drop-shadow(0 0 5px #ffd700);
+            }
+            50% { 
+                opacity: 1;
+                filter: drop-shadow(0 0 15px #ffd700);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Planet Earth */
+        .planet-earth {
+            position: fixed;
+            bottom: 10%;
+            left: 8%;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4a90e2, #2c5aa0);
+            box-shadow: 0 0 40px rgba(74, 144, 226, 0.5);
+            animation: rotate 20s linear infinite, floatPlanet 6s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .planet-earth::before {
+            content: '🌍';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes floatPlanet {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+
+        /* Rocket */
+        .rocket {
+            position: fixed;
+            width: 70px;
+            height: 90px;
+            animation: flyRocket 15s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes flyRocket {
+            0% {
+                top: 110%;
+                left: -5%;
+                transform: rotate(45deg);
+            }
+            100% {
+                top: -10%;
+                left: 105%;
+                transform: rotate(45deg);
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Navigation Arrows */
+        .top-nav {
+            position: fixed;
+            top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            pointer-events: auto;
+        }
+
+        .nav-arrow {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: 2px solid #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            user-select: none;
+            pointer-events: auto;
+        }
+
+        .nav-arrow:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+        }
+
+        .nav-arrow.right {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-color: #2ecc71;
+        }
+
+        .nav-arrow.right:hover {
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.8);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 20px 40px;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Thank You Content */
+        .thank-you-content {
+            text-align: center;
+            background: rgba(10, 22, 40, 0.7);
+            padding: 60px 40px;
+            border-radius: 20px;
+            border: 3px solid #3498db;
+            box-shadow: 0 0 40px rgba(52, 152, 219, 0.5);
+            max-width: 800px;
+            width: 100%;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Thank You Icon */
+        .thank-you-icon {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: bounce 2s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #3498db;
+            text-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            margin-bottom: 20px;
+            animation: colorChange 3s infinite alternate;
+        }
+
+        @keyframes colorChange {
+            0% { color: #3498db; text-shadow: 0 0 20px rgba(52, 152, 219, 0.5); }
+            50% { color: #5dade2; text-shadow: 0 0 20px rgba(93, 173, 226, 0.5); }
+            100% { color: #3498db; text-shadow: 0 0 20px rgba(52, 152, 219, 0.5); }
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #5dade2;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .message {
+            font-size: 18px;
+            color: #ecf0f1;
+            margin-bottom: 40px;
+            line-height: 1.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Highlights Grid */
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .highlight-card {
+            background: rgba(10, 22, 40, 0.8);
+            padding: 30px 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(52, 152, 219, 0.4);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .highlight-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .highlight-card:hover {
+            transform: translateY(-10px);
+            border-color: #3498db;
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+        }
+
+        .highlight-card:nth-child(1) {
+            border-color: rgba(231, 76, 60, 0.4);
+        }
+
+        .highlight-card:nth-child(1):hover {
+            border-color: #e74c3c;
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+        }
+
+        .highlight-card:nth-child(2) {
+            border-color: rgba(52, 152, 219, 0.4);
+        }
+
+        .highlight-card:nth-child(2):hover {
+            border-color: #3498db;
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+        }
+
+        .highlight-card:nth-child(3) {
+            border-color: rgba(46, 204, 113, 0.4);
+        }
+
+        .highlight-card:nth-child(3):hover {
+            border-color: #2ecc71;
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.5);
+        }
+
+        .highlight-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .highlight-title {
+            font-size: 20px;
+            color: #3498db;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .highlight-card:nth-child(1) .highlight-title {
+            color: #e74c3c;
+        }
+
+        .highlight-card:nth-child(3) .highlight-title {
+            color: #2ecc71;
+        }
+
+        .highlight-desc {
+            font-size: 14px;
+            color: #ecf0f1;
+            line-height: 1.6;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: 2px solid #3498db;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 200px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            border-color: #f1c40f;
+        }
+
+        .action-btn.primary:hover {
+            box-shadow: 0 0 30px rgba(241, 196, 15, 0.8);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-color: #2ecc71;
+        }
+
+        .action-btn.secondary:hover {
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.8);
+        }
+
+        /* Signature */
+        .signature {
+            margin-top: 50px;
+            text-align: center;
+            color: #5dade2;
+            font-size: 16px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(52, 152, 219, 0.3);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .signature strong {
+            color: #3498db;
+            font-size: 18px;
+            display: block;
+            margin-top: 10px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #5dade2;
+            margin-top: 60px;
+            width: 100%;
+            background: rgba(10, 22, 40, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        /* Floating Hearts Animation */
+        .floating-heart {
+            position: fixed;
+            font-size: 20px;
+            animation: floatHeart 8s linear infinite;
+            z-index: 0;
+            opacity: 0;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 80px 15px 30px;
+            }
+            
+            .thank-you-content {
+                padding: 40px 20px;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            .subtitle {
+                font-size: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .highlights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="shiny-star star1">✨</div>
+    <div class="shiny-star star2">⭐</div>
+    <div class="shiny-star star3">✨</div>
+    <div class="shiny-star star4">⭐</div>
+    <div class="shiny-star star5">✨</div>
+    
+    <div class="planet-earth"></div>
+    
+    <svg class="rocket" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="rocketGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+        <ellipse cx="32" cy="55" rx="8" ry="12" fill="#34495e"/>
+        <rect x="24" y="30" width="16" height="25" fill="url(#rocketGrad)" rx="2"/>
+        <polygon points="32,10 24,30 40,30" fill="#e74c3c"/>
+        <circle cx="32" cy="40" r="4" fill="#3498db" opacity="0.8"/>
+        <polygon points="24,50 18,65 24,60" fill="#2c3e50"/>
+        <polygon points="40,50 46,65 40,60" fill="#2c3e50"/>
+        <ellipse cx="32" cy="68" rx="6" ry="8" fill="#f39c12" opacity="0.9">
+            <animate attributeName="ry" values="8;12;8" dur="0.3s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="32" cy="72" rx="4" ry="6" fill="#e74c3c" opacity="0.8">
+            <animate attributeName="ry" values="6;9;6" dur="0.3s" repeatCount="indefinite"/>
+        </ellipse>
+    </svg>
+
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="nav-arrow left-arrow" onclick="goToPreviousPage()">←</div>
+        <div class="nav-arrow right" onclick="goHome()">🏠</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="thank-you-content">
+            <!-- Thank You Icon -->
+            <div class="thank-you-icon">🌟</div>
+            
+            <!-- Title -->
+            <h1>Thank You for Exploring!</h1>
+            
+            <!-- Subtitle -->
+            <p class="subtitle">
+                Your journey through our digital universe has been recorded among the stars ✨
+            </p>
+            
+            <!-- Message -->
+            <div class="message">
+                <p>We hope you enjoyed your adventure through our interactive experiences. From capturing precious moments in the gallery to defending your spaceship in the asteroid field, each interaction tells a story.</p>
+                <p>Your curiosity and engagement fuel our passion for creating memorable digital experiences. May your memories shine as bright as the stars above! 🌌</p>
+            </div>
+                      
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="action-btn primary" onclick="goToGallery()">
+                    <span style="font-size: 24px;">📸</span>
+                    <span>Back to Gallery</span>
+                </button>
+                
+                <button class="action-btn secondary" onclick="goToGame()">
+                    <span style="font-size: 24px;">🎮</span>
+                    <span>Play Again</span>
+                </button>
+
+                <button class="action-btn" onclick="shareExperience()">
+                    <span style="font-size: 24px;">🔗</span>
+                    <span>Share Experience</span>
+                </button>
+            </div>
+            
+            <!-- Signature -->
+            <div class="signature">
+                <p>Created with stardust and code</p>
+                <p><strong>__iipvtoo25</strong></p>
+                <p style="font-size: 14px; margin-top: 10px; color: #7f8c8d;">© 2025 Digital Universe Explorer</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <p>This interactive experience was crafted with passion and attention to detail.</p>
+            <p style="font-size: 14px; margin-top: 10px; color: #95a5a6;">
+                Every pixel tells a story • Every interaction creates a memory
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Navigation functions
+        function goToPreviousPage() {
+            // Go back to the previous page (Space Shooter)
+            window.location.href = 'comment.html';
+        }
+
+        function goHome() {
+            // Go to homepage 
+            window.location.href = 'index.html';
+        }
+
+        function goToGallery() {
+            window.location.href = 'art.html';
+        }
+
+        function goToGame() {
+            window.location.href = 'game.html';
+        }
+        
+         function goToComment() {
+            window.location.href = 'comment.html';
+        }
+
+
+        function shareExperience() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Digital Universe Experience',
+                    text: 'Check out this amazing interactive experience!',
+                    url: window.location.href
+                })
+                .then(() => console.log('Shared successfully'))
+                .catch(error => console.log('Sharing failed:', error));
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const shareUrl = window.location.href;
+                navigator.clipboard.writeText(shareUrl)
+                    .then(() => {
+                        alert('Link copied to clipboard! Share it with your friends. 📋✨');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy:', err);
+                        alert('Share this link: ' + shareUrl);
+                    });
+            }
+        }
+
+        function createFloatingHearts() {
+            const hearts = ['❤️', '💫', '✨', '⭐', '🌟', '🌠', '🚀', '🛸'];
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'floating-heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    document.body.appendChild(heart);
+                    
+                    // Remove heart after animation completes
+                    setTimeout(() => {
+                        if (heart.parentNode) {
+                            heart.parentNode.removeChild(heart);
+                        }
+                    }, 8000);
+                }, i * 300);
+            }
+        }
+
+        // Initialize floating hearts
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start floating hearts animation
+            createFloatingHearts();
+            
+            // Repeat every 10 seconds
+            setInterval(createFloatingHearts, 10000);
+            
+            // Add some interactive confetti on click
+            document.addEventListener('click', (e) => {
+                for (let i = 0; i < 5; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'floating-heart';
+                    confetti.textContent = ['✨', '⭐', '🌟'][Math.floor(Math.random() * 3)];
+                    confetti.style.left = e.clientX + 'px';
+                    confetti.style.top = e.clientY + 'px';
+                    confetti.style.animationDuration = '2s';
+                    confetti.style.fontSize = '15px';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 2000);
+                }
+            });
+        });
+
+        // Add title animation
+        const title = document.querySelector('h1');
+        if (title) {
+            title.addEventListener('mouseover', () => {
+                title.style.animation = 'colorChange 1s infinite alternate, bounce 0.5s ease';
+            });
+            
+            title.addEventListener('mouseout', () => {
+                title.style.animation = 'colorChange 3s infinite alternate';
+            });
+        }
+
+        // Add sound effects for buttons
+        const buttons = document.querySelectorAll('.action-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Create click effect
+                button.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 150);
+            });
+            
+            button.addEventListener('mouseenter', () => {
+                button.style.transition = 'all 0.2s ease';
+            });
+        });
+    </script>
+</body>
+</html>

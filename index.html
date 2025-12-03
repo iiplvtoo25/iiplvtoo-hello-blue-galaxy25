@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2847 50%, #2d4263 100%);
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent);
+            background-size: 200px 200px;
+            animation: twinkle 5s linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .rocket {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            animation: flyRocket 8s linear infinite;
+            z-index: 0;
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .planet1 {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #5dade2, #2980b9);
+            top: 10%;
+            right: 15%;
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.4);
+        }
+
+        .planet2 {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #e74c3c, #c0392b);
+            bottom: 20%;
+            left: 10%;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .planet3 {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at 30% 30%, #f39c12, #d68910);
+            top: 60%;
+            right: 8%;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.3);
+        }
+
+        @keyframes flyRocket {
+            0% {
+                top: 110%;
+                left: 10%;
+                transform: rotate(45deg);
+            }
+            100% {
+                top: -10%;
+                left: 90%;
+                transform: rotate(45deg);
+            }
+        }
+
+        .loading-container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            background: rgba(10, 22, 40, 0.6);
+            padding: 50px 60px;
+            border-radius: 20px;
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            box-shadow: 0 0 40px rgba(52, 152, 219, 0.2);
+        }
+
+        .stars-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .star {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+
+        .star-outline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            fill: rgba(52, 152, 219, 0.3);
+        }
+
+        .star-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            fill: #3498db;
+            clip-path: inset(100% 0 0 0);
+            transition: clip-path 0.3s ease;
+        }
+
+        .star.filled .star-fill {
+            clip-path: inset(0 0 0 0);
+        }
+
+        .loading-text {
+            color: #3498db;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        .percentage {
+            color: #5dade2;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .glow {
+            animation: glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 8px #3498db);
+            }
+            50% {
+                filter: drop-shadow(0 0 25px #3498db);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="planet planet1"></div>
+    <div class="planet planet2"></div>
+    <div class="planet planet3"></div>
+    
+    <svg class="rocket" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="rocketGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+        <!-- Rocket body -->
+        <ellipse cx="32" cy="55" rx="8" ry="12" fill="#34495e"/>
+        <rect x="24" y="30" width="16" height="25" fill="url(#rocketGrad)" rx="2"/>
+        <polygon points="32,10 24,30 40,30" fill="#e74c3c"/>
+        <!-- Window -->
+        <circle cx="32" cy="40" r="4" fill="#3498db" opacity="0.8"/>
+        <!-- Fins -->
+        <polygon points="24,50 18,65 24,60" fill="#2c3e50"/>
+        <polygon points="40,50 46,65 40,60" fill="#2c3e50"/>
+        <!-- Flames -->
+        <ellipse cx="32" cy="68" rx="6" ry="8" fill="#f39c12" opacity="0.9">
+            <animate attributeName="ry" values="8;12;8" dur="0.3s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="32" cy="72" rx="4" ry="6" fill="#e74c3c" opacity="0.8">
+            <animate attributeName="ry" values="6;9;6" dur="0.3s" repeatCount="indefinite"/>
+        </ellipse>
+    </svg>
+    
+    <div class="loading-container">
+        <div class="stars-container" id="starsContainer">
+            <div class="star" data-star="1">
+                <svg class="star-outline" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <svg class="star-fill" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
+            <div class="star" data-star="2">
+                <svg class="star-outline" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <svg class="star-fill" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
+            <div class="star" data-star="3">
+                <svg class="star-outline" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <svg class="star-fill" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
+            <div class="star" data-star="4">
+                <svg class="star-outline" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <svg class="star-fill" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
+            <div class="star" data-star="5">
+                <svg class="star-outline" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <svg class="star-fill" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="loading-text">Loading</div>
+        <div class="percentage" id="percentage">0%</div>
+    </div>
+
+    <script>
+        let progress = 0;
+        const stars = document.querySelectorAll('.star');
+        const percentageEl = document.getElementById('percentage');
+        const totalStars = stars.length;
+
+        function updateLoading() {
+            progress += 1;
+            percentageEl.textContent = progress + '%';
+
+            const filledStars = Math.floor((progress / 100) * totalStars);
+            
+            stars.forEach((star, index) => {
+                if (index < filledStars) {
+                    star.classList.add('filled');
+                    if (index === filledStars - 1) {
+                        star.classList.add('glow');
+                    } else {
+                        star.classList.remove('glow');
+                    }
+                }
+            });
+
+            if (progress < 100) {
+                setTimeout(updateLoading, 30);
+            } else {
+                setTimeout(() => {
+                    window.location.href = "home.html";               
+            }, 500);
+            }
+        }
+
+        updateLoading();
+    </script>
+</body>
+</html>

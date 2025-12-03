@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2847 50%, #2d4263 100%);
+            min-height: 100vh;
+            color: #ecf0f1;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent);
+            background-size: 200px 200px;
+            animation: twinkle 5s linear infinite;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .shiny-star {
+            position: fixed;
+            font-size: 30px;
+            animation: shine 2s ease-in-out infinite, float 4s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .star1 { top: 15%; left: 10%; animation-delay: 0s; }
+        .star2 { top: 25%; right: 15%; animation-delay: 0.5s; }
+        .star3 { top: 70%; left: 20%; animation-delay: 1s; }
+        .star4 { bottom: 20%; right: 25%; animation-delay: 1.5s; }
+        .star5 { top: 45%; left: 5%; animation-delay: 2s; }
+
+        @keyframes shine {
+            0%, 100% { 
+                opacity: 0.6;
+                filter: drop-shadow(0 0 5px #ffd700);
+            }
+            50% { 
+                opacity: 1;
+                filter: drop-shadow(0 0 15px #ffd700);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .planet-earth {
+            position: fixed;
+            bottom: 10%;
+            left: 8%;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4a90e2, #2c5aa0);
+            box-shadow: 0 0 40px rgba(74, 144, 226, 0.5);
+            animation: rotate 20s linear infinite, floatPlanet 6s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .planet-earth::before {
+            content: '🌍';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes floatPlanet {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+
+        .rocket {
+            position: fixed;
+            width: 70px;
+            height: 90px;
+            animation: flyRocket 12s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes flyRocket {
+            0% {
+                top: 110%;
+                left: -5%;
+                transform: rotate(45deg);
+            }
+            100% {
+                top: -10%;
+                left: 105%;
+                transform: rotate(45deg);
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-arrow {
+            position: fixed; /* Changed from absolute to fixed */
+            top: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: 2px solid #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            transition: all 0.3s ease;
+            z-index: 100;
+            text-decoration: none;
+        }
+
+        .nav-arrow.right-arrow {
+            left: auto;
+            right: 30px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border: 2px solid #2ecc71;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .nav-arrow.right-arrow:hover {
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.8);
+        }
+
+        .nav-arrow:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #3498db;
+            text-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #5dade2;
+            letter-spacing: 2px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .gallery-item {
+            background: rgba(10, 22, 40, 0.7);
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: fadeIn 1s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 0.1;
+        }
+
+        .gallery-item:nth-child(1) {
+            border-color: rgba(231, 76, 60, 0.5);
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.2);
+        }
+
+        .gallery-item:nth-child(1)::before {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .gallery-item:nth-child(1):hover {
+            border-color: #e74c3c;
+            box-shadow: 0 0 40px rgba(231, 76, 60, 0.5);
+        }
+
+        .gallery-item:nth-child(2) {
+            border-color: rgba(155, 89, 182, 0.5);
+            box-shadow: 0 0 30px rgba(155, 89, 182, 0.2);
+        }
+
+        .gallery-item:nth-child(2)::before {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+
+        .gallery-item:nth-child(2):hover {
+            border-color: #9b59b6;
+            box-shadow: 0 0 40px rgba(155, 89, 182, 0.5);
+        }
+
+        .gallery-item:nth-child(3) {
+            border-color: rgba(52, 152, 219, 0.5);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.2);
+        }
+
+        .gallery-item:nth-child(3)::before {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .gallery-item:nth-child(3):hover {
+            border-color: #3498db;
+            box-shadow: 0 0 40px rgba(52, 152, 219, 0.5);
+        }
+
+        .gallery-item:nth-child(4) {
+            border-color: rgba(46, 204, 113, 0.5);
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.2);
+        }
+
+        .gallery-item:nth-child(4)::before {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .gallery-item:nth-child(4):hover {
+            border-color: #2ecc71;
+            box-shadow: 0 0 40px rgba(46, 204, 113, 0.5);
+        }
+
+        .gallery-item:nth-child(5) {
+            border-color: rgba(241, 196, 15, 0.5);
+            box-shadow: 0 0 30px rgba(241, 196, 15, 0.2);
+        }
+
+        .gallery-item:nth-child(5)::before {
+            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+        }
+
+        .gallery-item:nth-child(5):hover {
+            border-color: #f1c40f;
+            box-shadow: 0 0 40px rgba(241, 196, 15, 0.5);
+        }
+
+        .gallery-item:nth-child(6) {
+            border-color: rgba(230, 126, 34, 0.5);
+            box-shadow: 0 0 30px rgba(230, 126, 34, 0.2);
+        }
+
+        .gallery-item:nth-child(6)::before {
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+        }
+
+        .gallery-item:nth-child(6):hover {
+            border-color: #e67e22;
+            box-shadow: 0 0 40px rgba(230, 126, 34, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 40px rgba(52, 152, 219, 0.5);
+            border-color: #3498db;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: #3498db;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-info {
+            padding: 20px;
+        }
+
+        .gallery-info h3 {
+            color: #3498db;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .gallery-info p {
+            color: #ecf0f1;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .upload-section {
+            background: rgba(10, 22, 40, 0.7);
+            border: 2px dashed rgba(52, 152, 219, 0.5);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: #3498db;
+            background: rgba(10, 22, 40, 0.9);
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: 2px solid #3498db;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #5dade2;
+            margin-top: 40px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-content {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            color: #3498db;
+            font-size: 32px;
+        }
+
+        .close-btn {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: 2px solid #e74c3c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.8);
+        }
+
+        .add-more-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: 2px solid #3498db;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .add-more-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+        }
+
+        .modal-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            padding-bottom: 50px;
+        }
+
+        .modal-photo-item {
+            background: rgba(10, 22, 40, 0.8);
+            border: 2px solid rgba(52, 152, 219, 0.4);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .modal-photo-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #3498db;
+            box-shadow: 0 10px 40px rgba(52, 152, 219, 0.6);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: rgba(231, 76, 60, 0.9);
+            border: 2px solid #e74c3c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .modal-photo-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.2);
+            background: #c0392b;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+        }
+
+        .modal-photo-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            display: block;
+            background: #000;
+        }
+
+        .modal-photo-info {
+            padding: 20px;
+            background: rgba(10, 22, 40, 0.9);
+        }
+
+        .modal-photo-info p {
+            color: #ecf0f1;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .modal-photo-info p strong {
+            color: #3498db;
+            font-size: 16px;
+        }
+
+        .storage-info {
+            text-align: center;
+            color: #5dade2;
+            font-size: 12px;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(10, 22, 40, 0.5);
+            border-radius: 10px;
+            border: 1px dashed rgba(52, 152, 219, 0.3);
+        }
+
+        .clear-storage-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: 2px solid #e74c3c;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-storage-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="shiny-star star1">✨</div>
+    <div class="shiny-star star2">⭐</div>
+    <div class="shiny-star star3">✨</div>
+    <div class="shiny-star star4">⭐</div>
+    <div class="shiny-star star5">✨</div>
+    
+    <div class="planet-earth"></div>
+    
+    <svg class="rocket" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="rocketGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+        <ellipse cx="32" cy="55" rx="8" ry="12" fill="#34495e"/>
+        <rect x="24" y="30" width="16" height="25" fill="url(#rocketGrad)" rx="2"/>
+        <polygon points="32,10 24,30 40,30" fill="#e74c3c"/>
+        <circle cx="32" cy="40" r="4" fill="#3498db" opacity="0.8"/>
+        <polygon points="24,50 18,65 24,60" fill="#2c3e50"/>
+        <polygon points="40,50 46,65 40,60" fill="#2c3e50"/>
+        <ellipse cx="32" cy="68" rx="6" ry="8" fill="#f39c12" opacity="0.9">
+            <animate attributeName="ry" values="8;12;8" dur="0.3s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="32" cy="72" rx="4" ry="6" fill="#e74c3c" opacity="0.8">
+            <animate attributeName="ry" values="6;9;6" dur="0.3s" repeatCount="indefinite"/>
+        </ellipse>
+    </svg>
+    
+    <!-- Left Arrow -->
+    <a href="index.html" class="nav-arrow left-arrow">←</a>
+
+    <!-- Right Arrow -->
+    <a href="game.html" class="nav-arrow right-arrow">→</a>
+
+    
+    <div class="container">
+        <header>
+            <h1>Moments in Frames</h1>
+            <p class="subtitle">Every photo holds a small story</p>
+        </header>
+
+        <div class="upload-section">
+            <div class="upload-icon">📸</div>
+            <h2 style="color: #3498db; margin-bottom: 10px;">Upload Your Photos</h2>
+            <p style="color: #5dade2;">Click the button below to add your images to the gallery</p>
+            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                Upload Photo
+            </button>
+        </div>
+
+        <div class="gallery-grid">
+            <div class="gallery-item" onclick="openGalleryUpload(1)">
+                <div class="gallery-image">
+                    <div style="text-align: center;">
+                        <div style="font-size: 64px; margin-bottom: 15px;">🌸</div>
+                        <div style="font-size: 16px; color: #e74c3c; font-weight: bold;">Click to add photos</div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 style="color: #e74c3c;"><strong>Family Forever</strong></h3>
+                    <p><strong>The people who hold my heart, my strength, and my happiest memories...all in one picture.</strong></p>
+                </div>
+            </div>
+
+            <div class="gallery-item" onclick="openGalleryUpload(2)">
+                <div class="gallery-image">
+                    <div style="text-align: center;">
+                        <div style="font-size: 64px; margin-bottom: 15px;">🌊</div>
+                        <div style="font-size: 16px; color: #3498db; font-weight: bold;">Click to add photos</div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 style="color: #3498db;"><strong>Nature Mode: ON</strong></h3>
+                    <p><strong>A peaceful moments far away from deadlines and WiFi.</strong></p>
+                </div>
+            </div>
+
+            <div class="gallery-item" onclick="openGalleryUpload(3)">
+                <div class="gallery-image">
+                    <div style="text-align: center;">
+                        <div style="font-size: 64px; margin-bottom: 15px;">🎭</div>
+                        <div style="font-size: 16px; color: #2ecc71; font-weight: bold;">Click to add photos</div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 style="color: #2ecc71;"><strong>Chaos Squad</strong></h3>
+                    <p><strong>When we're together, nothing goes as planned...and that's exactly what makes it fun.</strong></p>
+                </div>
+            </div>
+
+            <div class="gallery-item" onclick="openGalleryUpload(4)">
+                <div class="gallery-image">
+                    <div style="text-align: center;">
+                        <div style="font-size: 64px; margin-bottom: 15px;">⭐</div>
+                        <div style="font-size: 16px; color: #f1c40f; font-weight: bold;">Click to add photos</div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 style="color: #f1c40f;"><strong>Paws & Heartbeats</strong></h3>
+                    <p><strong>Small in size, big in LOVE...and even bigger in attitude.</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="storage-info" id="storageInfo">
+            Photos are saved in your browser. 
+            <button class="clear-storage-btn" onclick="clearAllStorage()">Clear All Photos</button>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 __iipvtoo25. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div id="photoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Gallery Photos</h2>
+                <div class="close-btn" onclick="closeModal()">✕</div>
+            </div>
+            <button class="add-more-btn" id="addMoreBtn">Add More Photos</button>
+            <div id="modalGalleryGrid" class="modal-gallery-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        let galleries = {}; // Don't initialize with empty arrays - let loadGalleriesFromStorage do it
+        let currentGalleryId = null;
+
+        // Gallery descriptions (original text)
+        const galleryDescriptions = {
+            1: {
+                title: "Family Forever",
+                description: "The people who hold my heart, my strength, and my happiest memories...all in one picture.",
+                icon: "🌸",
+                color: "#e74c3c"
+            },
+            2: {
+                title: "Nature Mode: ON",
+                description: "A peaceful moments far away from deadlines and WiFi.",
+                icon: "🌊",
+                color: "#3498db"
+            },
+            3: {
+                title: "Chaos Squad",
+                description: "When we're together, nothing goes as planned...and that's exactly what makes it fun.",
+                icon: "🎭",
+                color: "#2ecc71"
+            },
+            4: {
+                title: "Paws & Heartbeats",
+                description: "Small in size, big in LOVE...and even bigger in attitude.",
+                icon: "⭐",
+                color: "#f1c40f"
+            }
+        };
+
+        // Load galleries from localStorage on page load
+        function loadGalleriesFromStorage() {
+            const savedGalleries = localStorage.getItem('artGalleryData');
+            if (savedGalleries) {
+                try {
+                    galleries = JSON.parse(savedGalleries);
+                    console.log('Loaded galleries:', galleries);
+                    
+                    // Update all gallery items that have photos
+                    for (let galleryId in galleries) {
+                        if (galleries[galleryId] && galleries[galleryId].length > 0) {
+                            console.log(`Gallery ${galleryId} has ${galleries[galleryId].length} photos`);
+                            updateGalleryItem(parseInt(galleryId));
+                        }
+                    }
+                    
+                    updateStorageInfo();
+                } catch (e) {
+                    console.error('Error loading galleries from storage:', e);
+                    localStorage.removeItem('artGalleryData');
+                    // Initialize with empty arrays if loading fails
+                    galleries = {
+                        1: [], 2: [], 3: [], 4: []
+                    };
+                }
+            } else {
+                // No saved data, initialize with empty arrays
+                galleries = {
+                    1: [], 2: [], 3: [], 4: []
+                };
+            }
+        }
+
+        // Save galleries to localStorage
+        function saveGalleriesToStorage() {
+            try {
+                console.log('Saving galleries:', galleries);
+                localStorage.setItem('artGalleryData', JSON.stringify(galleries));
+                updateStorageInfo();
+            } catch (e) {
+                console.error('Error saving galleries to storage:', e);
+                alert('Storage limit reached! Please delete some photos or use smaller images.');
+            }
+        }
+
+        // Update storage information display - CHANGED FROM 5MB TO 15MB
+        function updateStorageInfo() {
+            const storageInfo = document.getElementById('storageInfo');
+            if (!storageInfo) return;
+            
+            let totalPhotos = 0;
+            let totalSize = 0;
+            
+            for (let galleryId in galleries) {
+                if (galleries[galleryId]) {
+                    totalPhotos += galleries[galleryId].length;
+                    galleries[galleryId].forEach(photo => {
+                        if (photo.size) totalSize += photo.size;
+                    });
+                }
+            }
+            
+            const usedStorage = JSON.stringify(galleries).length;
+            const maxStorage = 15 * 1024 * 1024; // CHANGED FROM 5MB TO 15MB
+            const percentage = Math.round((usedStorage / maxStorage) * 100);
+            
+            storageInfo.innerHTML = `
+                ${totalPhotos} photo${totalPhotos !== 1 ? 's' : ''} saved in your browser 
+                (${percentage}% of storage used).
+                <button class="clear-storage-btn" onclick="clearAllStorage()">Clear All Photos</button>
+            `;
+            
+            // Change color based on storage usage
+            if (percentage > 80) {
+                storageInfo.style.color = '#e74c3c';
+                storageInfo.style.borderColor = 'rgba(231, 76, 60, 0.5)';
+            } else if (percentage > 50) {
+                storageInfo.style.color = '#f39c12';
+                storageInfo.style.borderColor = 'rgba(243, 156, 18, 0.5)';
+            } else {
+                storageInfo.style.color = '#5dade2';
+                storageInfo.style.borderColor = 'rgba(52, 152, 219, 0.3)';
+            }
+        }
+
+        // Clear all photos from storage
+        function clearAllStorage() {
+            if (confirm('Are you sure you want to delete ALL photos from all galleries? This cannot be undone!')) {
+                // Clear galleries object
+                galleries = {
+                    1: [], 2: [], 3: [], 4: []
+                };
+                
+                // Clear localStorage
+                localStorage.removeItem('artGalleryData');
+                
+                // Reset all gallery items to initial state
+                for (let i = 1; i <= 4; i++) {
+                    resetGalleryItem(i);
+                }
+                
+                updateStorageInfo();
+                alert('All photos have been cleared!');
+            }
+        }
+
+        // Call this when page loads
+        window.addEventListener('load', function() {
+            loadGalleriesFromStorage();
+            console.log('Page loaded, galleries:', galleries);
+        });
+
+        fileInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            
+            if (currentGalleryId && files.length > 0) {
+                // Make sure gallery array exists
+                if (!galleries[currentGalleryId]) {
+                    galleries[currentGalleryId] = [];
+                }
+                
+                console.log(`Adding ${files.length} photos to gallery ${currentGalleryId}`);
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(event) {
+                            const photoData = {
+                                src: event.target.result,
+                                name: file.name,
+                                date: new Date().toLocaleDateString(),
+                                size: file.size,
+                                type: file.type
+                            };
+                            
+                            galleries[currentGalleryId].push(photoData);
+                            console.log(`Photo added to gallery ${currentGalleryId}, total: ${galleries[currentGalleryId].length}`);
+                            
+                            updateGalleryItem(currentGalleryId);
+                            saveGalleriesToStorage();
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                }
+                
+                // Auto-open the modal after upload
+                setTimeout(() => {
+                    viewGallery(currentGalleryId);
+                }, 100);
+            }
+            
+            fileInput.value = '';
+        });
+
+        function openGalleryUpload(galleryId) {
+            currentGalleryId = galleryId;
+            console.log(`Opening upload for gallery ${galleryId}`);
+            fileInput.click();
+        }
+
+        function updateGalleryItem(galleryId) {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const galleryItem = galleryItems[galleryId - 1];
+            const photos = galleries[galleryId] || [];
+            
+            console.log(`Updating gallery ${galleryId} with ${photos.length} photos`);
+            
+            if (photos.length > 0) {
+                const latestPhoto = photos[photos.length - 1];
+                const desc = galleryDescriptions[galleryId];
+                
+                galleryItem.innerHTML = `
+                    <div class="gallery-image">
+                        <img src="${latestPhoto.src}" alt="${latestPhoto.name}">
+                    </div>
+                    <div class="gallery-info">
+                        <h3 style="color: ${desc.color};">${desc.title}</h3>
+                        <p><strong>${desc.description}</strong></p>
+                        <p style="color: ${desc.color}; font-weight: bold; margin-top: 5px;">
+                            ${photos.length} photo${photos.length > 1 ? 's' : ''} - Click to view or add more
+                        </p>
+                    </div>
+                `;
+                
+                galleryItem.onclick = function() {
+                    viewGallery(galleryId);
+                };
+            }
+        }
+
+        function viewGallery(galleryId) {
+            const photos = galleries[galleryId] || [];
+            console.log(`Viewing gallery ${galleryId} with ${photos.length} photos`);
+            
+            if (photos.length > 0) {
+                showModal(galleryId);
+            } else {
+                openGalleryUpload(galleryId);
+            }
+        }
+
+        function showModal(galleryId) {
+            const modal = document.getElementById('photoModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalGrid = document.getElementById('modalGalleryGrid');
+            const addMoreBtn = document.getElementById('addMoreBtn');
+            const photos = galleries[galleryId] || [];
+
+            modalTitle.textContent = `${galleryDescriptions[galleryId].title} - ${photos.length} Photo${photos.length > 1 ? 's' : ''}`;
+            
+            modalGrid.innerHTML = '';
+            photos.forEach((photo, index) => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'modal-photo-item';
+                photoItem.innerHTML = `
+                    <div class="delete-btn" onclick="deletePhoto(${galleryId}, ${index}); event.stopPropagation();">🗑️</div>
+                    <img src="${photo.src}" alt="${photo.name}">
+                    <div class="modal-photo-info">
+                        <p><strong>Photo ${index + 1}</strong></p>
+                        <p>${photo.name}</p>
+                        <p style="color: #5dade2; font-size: 12px;">${photo.date}</p>
+                    </div>
+                `;
+                modalGrid.appendChild(photoItem);
+            });
+
+            addMoreBtn.onclick = function() {
+                closeModal();
+                openGalleryUpload(galleryId);
+            };
+
+            modal.classList.add('active');
+        }
+
+        function deletePhoto(galleryId, photoIndex) {
+            if (confirm('Are you sure you want to delete this photo?')) {
+                if (galleries[galleryId]) {
+                    galleries[galleryId].splice(photoIndex, 1);
+                    console.log(`Deleted photo ${photoIndex} from gallery ${galleryId}, remaining: ${galleries[galleryId].length}`);
+                    
+                    if (galleries[galleryId].length === 0) {
+                        closeModal();
+                        resetGalleryItem(galleryId);
+                    } else {
+                        updateGalleryItem(galleryId);
+                        showModal(galleryId);
+                    }
+                    
+                    saveGalleriesToStorage();
+                }
+            }
+        }
+
+        function resetGalleryItem(galleryId) {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const galleryItem = galleryItems[galleryId - 1];
+            const desc = galleryDescriptions[galleryId];
+            
+            galleryItem.innerHTML = `
+                <div class="gallery-image">
+                    <div style="text-align: center;">
+                        <div style="font-size: 64px; margin-bottom: 15px;">${desc.icon}</div>
+                        <div style="font-size: 16px; color: ${desc.color}; font-weight: bold;">Click to add photos</div>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3 style="color: ${desc.color};">${desc.title}</h3>
+                    <p><strong>${desc.description}</strong></p>
+                </div>
+            `;
+            
+            galleryItem.onclick = function() {
+                openGalleryUpload(galleryId);
+            };
+            
+            saveGalleriesToStorage();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('photoModal');
+            modal.classList.remove('active');
+        }
+
+    </script>
+</body>
+</html>

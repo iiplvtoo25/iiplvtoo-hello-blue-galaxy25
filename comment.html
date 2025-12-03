@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Comments</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2847 50%, #2d4263 100%);
+            min-height: 100vh;
+            color: #ecf0f1;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated starfield background */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent);
+            background-size: 200px 200px;
+            animation: twinkle 5s linear infinite;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        /* Shiny floating stars */
+        .shiny-star {
+            position: fixed;
+            font-size: 30px;
+            animation: shine 2s ease-in-out infinite, float 4s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .star1 { top: 15%; left: 10%; animation-delay: 0s; }
+        .star2 { top: 25%; right: 15%; animation-delay: 0.5s; }
+        .star3 { top: 70%; left: 20%; animation-delay: 1s; }
+        .star4 { bottom: 20%; right: 25%; animation-delay: 1.5s; }
+        .star5 { top: 45%; left: 5%; animation-delay: 2s; }
+
+        @keyframes shine {
+            0%, 100% { 
+                opacity: 0.6;
+                filter: drop-shadow(0 0 5px #ffd700);
+            }
+            50% { 
+                opacity: 1;
+                filter: drop-shadow(0 0 15px #ffd700);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Floating planet */
+        .planet-earth {
+            position: fixed;
+            bottom: 10%;
+            left: 8%;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4a90e2, #2c5aa0);
+            box-shadow: 0 0 40px rgba(74, 144, 226, 0.5);
+            animation: rotate 20s linear infinite, floatPlanet 6s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .planet-earth::before {
+            content: '🌍';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes floatPlanet {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+
+        /* Flying rocket */
+        .rocket {
+            position: fixed;
+            width: 70px;
+            height: 90px;
+            animation: flyRocket 12s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes flyRocket {
+            0% {
+                top: 110%;
+                left: -5%;
+                transform: rotate(45deg);
+            }
+            100% {
+                top: -10%;
+                left: 105%;
+                transform: rotate(45deg);
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Container for your content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation arrows */
+        .nav-arrow {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: 2px solid #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            transition: all 0.3s ease;
+            z-index: 100;
+            text-decoration: none;
+        }
+
+        .nav-arrow.right-arrow {
+            left: auto;
+            right: 30px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border: 2px solid #2ecc71;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .nav-arrow.right-arrow:hover {
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.8);
+        }
+
+        .nav-arrow:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+        }
+
+        /* Header styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #3498db;
+            text-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #5dade2;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        /* COMMENT SECTION STYLES */
+        .comments-section {
+            background: rgba(10, 22, 40, 0.8);
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Comment Form */
+        .comment-form {
+            background: rgba(15, 30, 50, 0.6);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #5dade2;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(10, 22, 40, 0.8);
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            border-radius: 8px;
+            color: #ecf0f1;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+        }
+
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+        }
+
+        /* Comments List */
+        .comments-list {
+            margin-top: 40px;
+        }
+
+        .comment-item {
+            background: rgba(15, 30, 50, 0.6);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.5s ease;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .comment-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(52, 152, 219, 0.4);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.2);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .comment-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .comment-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+        }
+
+        .author-info h4 {
+            color: #3498db;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .author-info span {
+            color: #5dade2;
+            font-size: 14px;
+        }
+
+        .comment-date {
+            color: #7f8c8d;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .comment-content {
+            color: #ecf0f1;
+            line-height: 1.8;
+            font-size: 16px;
+            padding: 15px 0;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(52, 152, 219, 0.1);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #5dade2;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.liked {
+            color: #e74c3c;
+        }
+
+        .no-comments {
+            text-align: center;
+            color: #5dade2;
+            padding: 40px;
+            font-size: 18px;
+            background: rgba(15, 30, 50, 0.4);
+            border-radius: 12px;
+            border: 2px dashed rgba(52, 152, 219, 0.3);
+        }
+
+        /* Comment Stats */
+        .comment-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(15, 30, 50, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 32px;
+            color: #3498db;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #5dade2;
+            font-size: 14px;
+        }
+
+        /* Clear Comments Button */
+        .clear-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: 2px solid #e74c3c;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #5dade2;
+            margin-top: 40px;
+            background: rgba(10, 22, 40, 0.6);
+            border-radius: 10px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .comments-section {
+                padding: 20px;
+            }
+            
+            .comment-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .comment-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .stat-item {
+                width: 100%;
+            }
+            
+            .comment-actions {
+                flex-wrap: wrap;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="shiny-star star1">✨</div>
+    <div class="shiny-star star2">⭐</div>
+    <div class="shiny-star star3">✨</div>
+    <div class="shiny-star star4">⭐</div>
+    <div class="shiny-star star5">✨</div>
+    
+    <div class="planet-earth"></div>
+    
+    <svg class="rocket" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="rocketGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+        <ellipse cx="32" cy="55" rx="8" ry="12" fill="#34495e"/>
+        <rect x="24" y="30" width="16" height="25" fill="url(#rocketGrad)" rx="2"/>
+        <polygon points="32,10 24,30 40,30" fill="#e74c3c"/>
+        <circle cx="32" cy="40" r="4" fill="#3498db" opacity="0.8"/>
+        <polygon points="24,50 18,65 24,60" fill="#2c3e50"/>
+        <polygon points="40,50 46,65 40,60" fill="#2c3e50"/>
+        <ellipse cx="32" cy="68" rx="6" ry="8" fill="#f39c12" opacity="0.9">
+            <animate attributeName="ry" values="8;12;8" dur="0.3s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="32" cy="72" rx="4" ry="6" fill="#e74c3c" opacity="0.8">
+            <animate attributeName="ry" values="6;9;6" dur="0.3s" repeatCount="indefinite"/>
+        </ellipse>
+    </svg>
+    
+    <!-- Navigation Arrows -->
+    <a href="game.html" class="nav-arrow">←</a>
+    <a href="thanku.html" class="nav-arrow right-arrow">→</a>
+    
+    <!-- Content Container -->
+    <div class="container">
+        <header>
+            <h1>~Share Your Comments~</h1>
+            <p class="subtitle">Share your thoughts about My Little Space!!</p>
+        </header>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <!-- Comment Stats -->
+            <div class="comment-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalComments">0</span>
+                    <span class="stat-label">Total Comments</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="uniqueUsers">0</span>
+                    <span class="stat-label">Unique Users</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalLikes">0</span>
+                    <span class="stat-label">Total Likes</span>
+                </div>
+            </div>
+
+            <!-- Comment Form -->
+            <div class="comment-form">
+                <h2 style="color: #3498db; margin-bottom: 20px; text-align: center;">Leave Your Comment</h2>
+                
+                <div class="form-group">
+                    <label for="userName">Your Name</label>
+                    <input type="text" id="userName" class="form-input" placeholder="Enter your name..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userComment">Your Comment</label>
+                    <textarea id="userComment" class="form-input" placeholder="Share your thoughts about my art..." required></textarea>
+                </div>
+                
+                <button class="submit-btn" onclick="addComment()">
+                    <span id="submitText">Post Comment</span>
+                    <span id="submitIcon" style="margin-left: 10px;">🚀</span>
+                </button>
+            </div>
+
+            <!-- Comments List -->
+            <div class="comments-list" id="commentsList">
+                <!-- Comments will be loaded here -->
+                <div class="no-comments" id="noComments">
+                    <p style="font-size: 20px; margin-bottom: 10px;">🌟 No comments yet 🌟</p>
+                    <p>Be the first to share your thoughts about the website!</p>
+                </div>
+            </div>
+
+            <!-- Clear Comments Button -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="clear-btn" onclick="clearAllComments()">
+                    Clear All Comments
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 __iipvtoo25. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 14px; color: #7f8c8d;">
+                Comments are saved in your browser's local storage
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Comments data storage
+        let comments = JSON.parse(localStorage.getItem('galleryComments')) || [];
+        let nextId = comments.length > 0 ? Math.max(...comments.map(c => c.id)) + 1 : 1;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            displayComments();
+            updateStats();
+            
+            // Set right arrow to scroll to comment form
+            document.getElementById('scrollToBottom').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('.comment-form').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            });
+            
+            // Allow submitting with Enter key in textarea
+            document.getElementById('userComment').addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    addComment();
+                }
+            });
+        });
+
+        // Add a new comment
+        function addComment() {
+            const nameInput = document.getElementById('userName');
+            const commentInput = document.getElementById('userComment');
+            const submitBtn = document.querySelector('.submit-btn');
+            const submitText = document.getElementById('submitText');
+            const submitIcon = document.getElementById('submitIcon');
+            
+            const name = nameInput.value.trim();
+            const comment = commentInput.value.trim();
+            
+            if (!name || !comment) {
+                alert('Please enter both your name and comment!');
+                return;
+            }
+            
+            // Create new comment object
+            const newComment = {
+                id: nextId++,
+                name: name,
+                comment: comment,
+                date: new Date().toLocaleString(),
+                likes: 0,
+                avatar: getRandomAvatar(),
+                liked: false
+            };
+            
+            // Add to beginning of array
+            comments.unshift(newComment);
+            
+            // Save to localStorage
+            localStorage.setItem('galleryComments', JSON.stringify(comments));
+            
+            // Update display
+            displayComments();
+            updateStats();
+            
+            // Show success animation
+            submitBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+            submitBtn.style.borderColor = '#2ecc71';
+            submitText.textContent = 'Comment Posted!';
+            submitIcon.textContent = '✅';
+            
+            // Reset form
+            nameInput.value = '';
+            commentInput.value = '';
+            
+            // Reset button after delay
+            setTimeout(() => {
+                submitBtn.style.background = 'linear-gradient(135deg, #3498db, #2980b9)';
+                submitBtn.style.borderColor = '#3498db';
+                submitText.textContent = 'Post Comment';
+                submitIcon.textContent = '🚀';
+            }, 2000);
+        }
+
+        // Get random avatar emoji
+        function getRandomAvatar() {
+            const avatars = ['👤', '🌟', '🎨', '📸', '🌸', '🌊', '⭐', '🎭', '🚀', '✨', '👽', '🪐', '☄️', '🌠', '🔭'];
+            return avatars[Math.floor(Math.random() * avatars.length)];
+        }
+
+        // Display all comments
+        function displayComments() {
+            const commentsList = document.getElementById('commentsList');
+            const noComments = document.getElementById('noComments');
+            
+            if (comments.length === 0) {
+                if (!noComments) {
+                    commentsList.innerHTML = `
+                        <div class="no-comments" id="noComments">
+                            <p style="font-size: 20px; margin-bottom: 10px;">🌟 No comments yet 🌟</p>
+                            <p>Be the first to share your thoughts about the gallery!</p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+            
+            // Remove no comments message if it exists
+            if (noComments) {
+                noComments.remove();
+            }
+            
+            // Generate comments HTML
+            commentsList.innerHTML = comments.map(comment => `
+                <div class="comment-item" id="comment-${comment.id}">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            <div class="comment-avatar">${comment.avatar}</div>
+                            <div class="author-info">
+                                <h4>${comment.name}</h4>
+                                <span>Gallery Visitor</span>
+                            </div>
+                        </div>
+                        <div class="comment-date">${comment.date}</div>
+                    </div>
+                    <div class="comment-content">
+                        ${comment.comment}
+                    </div>
+                    <div class="comment-actions">
+                        <button class="action-btn ${comment.liked ? 'liked' : ''}" onclick="likeComment(${comment.id})">
+                            <span>👍</span> Like (${comment.likes})
+                        </button>
+                        <button class="action-btn" onclick="replyToComment(${comment.id})">
+                            <span>💬</span> Reply
+                        </button>
+                        <button class="action-btn" onclick="shareComment(${comment.id})">
+                            <span>🔗</span> Share
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Like a comment
+        function likeComment(commentId) {
+            const comment = comments.find(c => c.id === commentId);
+            if (comment) {
+                if (!comment.liked) {
+                    comment.likes++;
+                    comment.liked = true;
+                } else {
+                    comment.likes--;
+                    comment.liked = false;
+                }
+                
+                localStorage.setItem('galleryComments', JSON.stringify(comments));
+                displayComments();
+                updateStats();
+            }
+        }
+
+        // Reply to a comment
+        function replyToComment(commentId) {
+            const comment = comments.find(c => c.id === commentId);
+            if (comment) {
+                const commentInput = document.getElementById('userComment');
+                commentInput.value = `@${comment.name} `;
+                commentInput.focus();
+                
+                // Smooth scroll to comment form
+                document.querySelector('.comment-form').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }
+        }
+
+        // Share a comment
+        function shareComment(commentId) {
+            const comment = comments.find(c => c.id === commentId);
+            if (comment) {
+                const shareText = `"${comment.comment.substring(0, 100)}..." - ${comment.name}`;
+                
+                // Try to use Web Share API if available
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Gallery Comment',
+                        text: shareText,
+                        url: window.location.href
+                    });
+                } else {
+                    // Fallback to copying to clipboard
+                    navigator.clipboard.writeText(shareText + '\n\nFrom: Moments in Frames Gallery');
+                    alert('Comment copied to clipboard!');
+                }
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalComments = comments.length;
+            const uniqueUsers = new Set(comments.map(c => c.name)).size;
+            const totalLikes = comments.reduce((sum, c) => sum + c.likes, 0);
+            
+            document.getElementById('totalComments').textContent = totalComments;
+            document.getElementById('uniqueUsers').textContent = uniqueUsers;
+            document.getElementById('totalLikes').textContent = totalLikes;
+        }
+
+        // Clear all comments
+        function clearAllComments() {
+            if (comments.length === 0) {
+                alert('There are no comments to clear!');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to delete ALL comments? This action cannot be undone!')) {
+                comments = [];
+                localStorage.removeItem('galleryComments');
+                nextId = 1;
+                displayComments();
+                updateStats();
+                alert('All comments have been cleared!');
+            }
+        }
+
+        // Generate sample comments for testing
+        function generateSampleComments() {
+            if (comments.length > 0) {
+                if (!confirm('This will replace your current comments. Continue?')) {
+                    return;
+                }
+            }
+            
+            const sampleComments = [
+                {
+                    name: "Alex",
+                    comment: "Absolutely love the cosmic theme! The star animations are mesmerizing.",
+                    avatar: "🌟"
+                },
+                {
+                    name: "Sam",
+                    comment: "The gallery organization is perfect. Each category tells a different story.",
+                    avatar: "🎨"
+                },
+                {
+                    name: "Jordan",
+                    comment: "The upload feature works flawlessly. Saved all my family photos here!",
+                    avatar: "📸"
+                },
+                {
+                    name: "Taylor",
+                    comment: "The color scheme is beautiful. Feels like browsing photos in space!",
+                    avatar: "🪐"
+                }
+            ];
+            
+            comments = sampleComments.map((c, index) => ({
+                id: index + 1,
+                name: c.name,
+                comment: c.comment,
+                date: new Date().toLocaleString(),
+                likes: Math.floor(Math.random() * 10),
+                avatar: c.avatar,
+                liked: false
+            }));
+            
+            nextId = comments.length + 1;
+            localStorage.setItem('galleryComments', JSON.stringify(comments));
+            displayComments();
+            updateStats();
+        }
+
+        // Uncomment the line below to generate sample comments automatically
+        // generateSampleComments();
+    </script>
+</body>
+</html>
